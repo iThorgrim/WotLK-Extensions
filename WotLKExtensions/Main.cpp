@@ -21,7 +21,7 @@ void Main::Init()
 	if (customPackets)
 		CustomPacket::Apply();
 
-	if (outOfBoundLuaFunctions || useCustomDBCFiles || customPackets)
+	if (outOfBoundLuaFunctions || outOfBoundGlueLuaFunctions || useCustomDBCFiles || customPackets)
 	{
 		// From AwesomeWotLK, invalid function pointer hack
 		*(uint32_t*)0xD415B8 = 1;
@@ -30,6 +30,9 @@ void Main::Init()
 
 	if (outOfBoundLuaFunctions || customPackets)
 		CustomLua::Apply();
+
+	if (outOfBoundGlueLuaFunctions)
+		CustomGlueLua::Apply();
 }
 
 extern "C"
