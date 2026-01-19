@@ -34,3 +34,5 @@ static bool extendedItemMods = false;
 static bool customActionBarFunctions = false;
 // Various dev functions
 static bool devHelperFunctions = false;
+// Enhanced graphics functions (farclip, camera, shadows, lights)
+static bool graphicsEnhancedFunctions = true;

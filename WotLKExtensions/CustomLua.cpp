@@ -1,6 +1,7 @@
 #include "CustomLua.h"
 #include "Player.h"
 #include "CDBCMgr/CDBCDefs/LFGRoles.h"
+#include "GraphicsEnhanced.h"
 
 void CustomLua::Apply()
 {
@@ -15,7 +16,7 @@ int CustomLua::LoadScriptFunctionsCustom()
 	{
 		char* funcName = it->first;
 		void* funcPtr = it->second;
-	
+
 		FrameScript::RegisterFunction(funcName, funcPtr);
 	}
 
@@ -505,6 +506,204 @@ void CustomLua::AddToFunctionMap(char* name, void* ptr)
 	luaFuncts.insert(std::make_pair(name, ptr));
 }
 
+int CustomLua::SetExtendedFarclip(lua_State* L)
+{
+	if (!FrameScript::IsNumber(L, 1))
+	{
+		FrameScript::PushBoolean(L, false);
+		return 1;
+	}
+
+	float value = (float)FrameScript::GetNumber(L, 1);
+
+	if (value < 100.0f) value = 100.0f;
+	if (value > GraphicsEnhanced::FARCLIP_MAX) value = GraphicsEnhanced::FARCLIP_MAX;
+
+	char command[64];
+	sprintf_s(command, "farclip %f", value);
+
+	typedef void(__cdecl* ConsoleExecFn)(const char*, int);
+	ConsoleExecFn ConsoleExec = (ConsoleExecFn)0x7658A0;
+	ConsoleExec(command, 0);
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
+int CustomLua::SetExtendedCameraDistance(lua_State* L)
+{
+	if (!FrameScript::IsNumber(L, 1))
+	{
+		FrameScript::PushBoolean(L, false);
+		return 1;
+	}
+
+	float value = (float)FrameScript::GetNumber(L, 1);
+
+	if (value < 1.0f) value = 1.0f;
+	if (value > GraphicsEnhanced::CAMERA_DISTANCE_ABSOLUTE) value = GraphicsEnhanced::CAMERA_DISTANCE_ABSOLUTE;
+
+	char command[64];
+	sprintf_s(command, "cameraDistanceMax %f", value);
+
+	typedef void(__cdecl* ConsoleExecFn)(const char*, int);
+	ConsoleExecFn ConsoleExec = (ConsoleExecFn)0x7658A0;
+	ConsoleExec(command, 0);
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
+int CustomLua::SetHorizonScale(lua_State* L)
+{
+	if (!FrameScript::IsNumber(L, 1))
+	{
+		FrameScript::PushBoolean(L, false);
+		return 1;
+	}
+
+	float value = (float)FrameScript::GetNumber(L, 1);
+	if (value < 1.0f) value = 1.0f;
+	if (value > GraphicsEnhanced::HORIZON_FARCLIP_SCALE_MAX) value = GraphicsEnhanced::HORIZON_FARCLIP_SCALE_MAX;
+
+	char command[64];
+	sprintf_s(command, "horizonFarclipScale %f", value);
+
+	typedef void(__cdecl* ConsoleExecFn)(const char*, int);
+	ConsoleExecFn ConsoleExec = (ConsoleExecFn)0x7658A0;
+	ConsoleExec(command, 0);
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
+int CustomLua::SetEnvironmentDetail(lua_State* L)
+{
+	if (!FrameScript::IsNumber(L, 1))
+	{
+		FrameScript::PushBoolean(L, false);
+		return 1;
+	}
+
+	float value = (float)FrameScript::GetNumber(L, 1);
+	if (value < 0.5f) value = 0.5f;
+	if (value > GraphicsEnhanced::ENVIRONMENT_DETAIL_MAX) value = GraphicsEnhanced::ENVIRONMENT_DETAIL_MAX;
+
+	char command[64];
+	sprintf_s(command, "environmentDetail %f", value);
+
+	typedef void(__cdecl* ConsoleExecFn)(const char*, int);
+	ConsoleExecFn ConsoleExec = (ConsoleExecFn)0x7658A0;
+	ConsoleExec(command, 0);
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
+int CustomLua::SetTextureQuality(lua_State* L)
+{
+	typedef void(__cdecl* ConsoleExecFn)(const char*, int);
+	ConsoleExecFn ConsoleExec = (ConsoleExecFn)0x7658A0;
+	char command[64];
+
+	if (FrameScript::IsNumber(L, 1))
+	{
+		int baseMip = (int)FrameScript::GetNumber(L, 1);
+		if (baseMip < 0) baseMip = 0;
+		if (baseMip > 3) baseMip = 3;
+		sprintf_s(command, "baseMip %d", baseMip);
+		ConsoleExec(command, 0);
+	}
+
+	if (FrameScript::IsNumber(L, 2))
+	{
+		float lodBias = (float)FrameScript::GetNumber(L, 2);
+		if (lodBias < -1.0f) lodBias = -1.0f;
+		if (lodBias > 1.0f) lodBias = 1.0f;
+		sprintf_s(command, "texLodBias %f", lodBias);
+		ConsoleExec(command, 0);
+	}
+
+	if (FrameScript::IsNumber(L, 3))
+	{
+		int terrainAlpha = (int)FrameScript::GetNumber(L, 3);
+		if (terrainAlpha < 1) terrainAlpha = 1;
+		if (terrainAlpha > 8) terrainAlpha = 8;
+		sprintf_s(command, "terrainAlphaBitDepth %d", terrainAlpha);
+		ConsoleExec(command, 0);
+	}
+
+	if (FrameScript::IsNumber(L, 4))
+	{
+		int cacheSize = (int)FrameScript::GetNumber(L, 4);
+		if (cacheSize < 0) cacheSize = 0;
+		if (cacheSize > 512) cacheSize = 512;
+		sprintf_s(command, "gxTextureCacheSize %d", cacheSize);
+		ConsoleExec(command, 0);
+	}
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
+int CustomLua::SetRenderFlags(lua_State* L)
+{
+	typedef void(__cdecl* ConsoleExecFn)(const char*, int);
+	ConsoleExecFn ConsoleExec = (ConsoleExecFn)0x7658A0;
+	char command[64];
+
+	if (FrameScript::GetParam(L, 1, 0))
+		ConsoleExec("specular 1", 0);
+	else
+		ConsoleExec("specular 0", 0);
+
+	if (FrameScript::GetParam(L, 2, 0))
+		ConsoleExec("mapShadows 1", 0);
+	else
+		ConsoleExec("mapShadows 0", 0);
+
+	if (FrameScript::GetParam(L, 3, 0))
+		ConsoleExec("showfootprints 1", 0);
+	else
+		ConsoleExec("showfootprints 0", 0);
+
+	if (FrameScript::GetParam(L, 4, 0))
+		ConsoleExec("objectFade 1", 0);
+	else
+		ConsoleExec("objectFade 0", 0);
+
+	if (FrameScript::IsNumber(L, 5))
+	{
+		int lod = (int)FrameScript::GetNumber(L, 5);
+		if (lod < 0) lod = 0;
+		if (lod > 1) lod = 1;
+		sprintf_s(command, "lod %d", lod);
+		ConsoleExec(command, 0);
+	}
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
+int CustomLua::SetFogDistance(lua_State* L)
+{
+	float* fogNear = (float*)0xCD8780;
+	float* fogFar = (float*)0xCD8784;
+
+	if (FrameScript::IsNumber(L, 1))
+	{
+		*fogNear = (float)FrameScript::GetNumber(L, 1);
+	}
+
+	if (FrameScript::IsNumber(L, 2))
+	{
+		*fogFar = (float)FrameScript::GetNumber(L, 2);
+	}
+
+	FrameScript::PushBoolean(L, true);
+	return 1;
+}
+
 void CustomLua::RegisterFunctions()
 {
 	if (outOfBoundLuaFunctions)
@@ -522,7 +721,7 @@ void CustomLua::RegisterFunctions()
 		AddToFunctionMap("ReplaceActionBarSpell", &ReplaceActionBarSpell);
 		AddToFunctionMap("SetSpellInActionBarSlot", &SetSpellInActionBarSlot);
 	}
-	
+
 	if (devHelperFunctions)
 	{
 		AddToFunctionMap("ReloadMap", &ReloadMap);
@@ -541,5 +740,16 @@ void CustomLua::RegisterFunctions()
 		AddToFunctionMap("GetCustomCombatRating", &GetCustomCombatRating);
 		AddToFunctionMap("GetCustomCombatRatingBonus", &GetCustomCombatRatingBonus);
 		AddToFunctionMap("PortGraveyard", &PortGraveyard);
+	}
+
+	if (graphicsEnhancedFunctions)
+	{
+		AddToFunctionMap("SetExtendedFarclip", &SetExtendedFarclip);
+		AddToFunctionMap("SetExtendedCameraDistance", &SetExtendedCameraDistance);
+		AddToFunctionMap("SetHorizonScale", &SetHorizonScale);
+		AddToFunctionMap("SetEnvironmentDetail", &SetEnvironmentDetail);
+		AddToFunctionMap("SetTextureQuality", &SetTextureQuality);
+		AddToFunctionMap("SetRenderFlags", &SetRenderFlags);
+		AddToFunctionMap("SetFogDistance", &SetFogDistance);
 	}
 }

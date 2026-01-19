@@ -8,6 +8,9 @@ void Main::OnAttach()
 	Misc::ApplyPatches();
 	Player::ApplyPatches();
 	WorldDataExtensions::ApplyPatches();
+	
+	// Graphics enhancements (view distance, camera, shadows, lights)
+	GraphicsEnhanced::Initialize();
 
 	// Custom dbc loader
 	if (useCustomDBCFiles)

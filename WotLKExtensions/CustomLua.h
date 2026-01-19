@@ -42,5 +42,13 @@ private:
 
 	static int PortGraveyard(lua_State* L);
 
+	static int SetExtendedFarclip(lua_State* L);
+	static int SetExtendedCameraDistance(lua_State* L);
+	static int SetHorizonScale(lua_State* L);
+	static int SetEnvironmentDetail(lua_State* L);
+	static int SetTextureQuality(lua_State* L);
+	static int SetRenderFlags(lua_State* L);
+	static int SetFogDistance(lua_State* L);
+
 	friend class Main;
 };

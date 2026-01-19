@@ -38,6 +38,14 @@ static void __cdecl RegisterGlueCVarsWrapper()
 
 void CustomGlueCVar::Apply()
 {
+	AddCVar({
+		"characterOrder",
+		"Order of characters on character select screen",
+		"1,2,3,4,5,6,7,8,9,10",
+		nullptr,
+		CVAR_FLAG_GLUE | CVAR_FLAG_ARCHIVE
+	});
+
 	// Hook the CALL instruction at 0x404146 that calls RegisterGlueCVars (0x401B60)
 	// This is exactly like CustomGlueLua hooks LoadFunctions
 	uint32_t callSiteAddress = 0x404146;

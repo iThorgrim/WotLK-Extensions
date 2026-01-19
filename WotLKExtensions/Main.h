@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "World.h"
 #include "CDBCMgr/CDBCMgr.h"
+#include "GraphicsEnhanced.h"
 
 class Main
 {
