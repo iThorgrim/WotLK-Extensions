@@ -1,10 +1,13 @@
 # Graphics Enhanced Functions
 
+This module extends the WoW 3.3.5a client's graphics capabilities by patching hardcoded limits and exposing new Lua functions for addon developers.
 
 ## Overview
+
 The Graphics Enhanced system patches several internal client limitations:
 - **View Distance (Farclip)**: Extended from 1277 to 3831
 - **Camera Distance**: Extended from 50 to 500
+- **Horizon Scale**: Extended from 3-6 range to 1-12
 - **Environment Detail**: Extended from 0.5-1.5 range to 0.5-6.0
 - **Fog**: Patched to reduce the "blue fog wall" effect
 
@@ -12,10 +15,12 @@ The Graphics Enhanced system patches several internal client limitations:
 
 ## Patched Limits
 
+| Setting | Default Limit | New Limit |
 |---------|---------------|-----------|
 | Farclip (View Distance) | 1277.0 | 3831.0 |
 | Camera Distance Max | 50.0 | 500.0 |
 | Horizon Farclip Scale | 3.0 - 6.0 | 1.0 - 12.0 |
+| Environment Detail | 0.5 - 1.5 | 0.5 - 6.0 |
 
 ---
 
